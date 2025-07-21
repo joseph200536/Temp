@@ -1,3 +1,25 @@
+/* src/index.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom CSS to hide scrollbar while keeping it functional */
+/* Apply 'custom-scrollbar' class to the element you want to hide the scrollbar for */
+
+/* For Webkit browsers (Chrome, Safari, Edge) */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 0; /* Hide vertical scrollbar */
+  height: 0; /* Hide horizontal scrollbar */
+  background: transparent; /* Make background transparent */
+}
+
+/* For Firefox */
+.custom-scrollbar {
+  scrollbar-width: none; /* Hide scrollbar */
+}
+
+/* For Internet Explorer and older Edge (if still supporting) */
+.custom-scrollbar {
+  -ms-overflow-style: none; /* Hide scrollbar */
+}

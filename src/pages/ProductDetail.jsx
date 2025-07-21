@@ -21,7 +21,7 @@ const ProductDetail = () => {
     const bookId = b['ISBN-10'] || b.ISBN || b['Uniq id'];
     return String(bookId) === String(id);
   });
-
+  
   const productReviews = getProductReviews(id);
   const averageRating = getProductAverageRating(id);
 
@@ -46,15 +46,14 @@ const ProductDetail = () => {
       navigate('/login');
       return;
     }
-
-    // Create product object from book data
+    
     const product = {
       id: book['ISBN-10'] || book.ISBN || book['Uniq id'],
-      name: book.Title.replace(/b'|'/g, ''), // Clean up title
+      name: book.Title.replace(/b'|'/g, ''),
       price: parseFloat(book.Price.replace('$', '')) || 0,
       image: book.Images
     };
-
+    
     addToCart(product);
   };
 
@@ -63,58 +62,60 @@ const ProductDetail = () => {
       navigate('/login');
       return;
     }
-
-    // Create product object from book data
+    
     const product = {
       id: book['ISBN-10'] || book.ISBN || book['Uniq id'],
-      name: book.Title.replace(/b'|'/g, ''), // Clean up title
+      name: book.Title.replace(/b'|'/g, ''),
       price: parseFloat(book.Price.replace('$', '')) || 0,
       image: book.Images
     };
-
+    
     addToCart(product);
     navigate('/cart');
   };
 
-  // Determine the primary category for the breadcrumb
   const categories = book.Breadcrumbs ? book.Breadcrumbs.split('|').map(c => c.trim()) : [];
   const primaryCategory = categories.length > 0 ? categories[0] : 'Uncategorized';
-  const cleanTitle = book.Title.replace(/b'|'/g, ''); // Clean up title for display
+  const cleanTitle = book.Title.replace(/b'|'/g, '');
 
-  // Extract publishing year from Publisher string
   const publisherMatch = book.Publisher.match(/\((\w+ \d{1,2}, \d{4})\)/);
   const publishingDate = publisherMatch ? publisherMatch[1] : 'N/A';
   const publisherName = book.Publisher.split('(')[0].trim();
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-16">
+      {/* Main flex container for left and right columns */}
       <div className="flex justify-center flex-col md:flex-row gap-8">
-        {/* Left side - Product Image and Buttons */}
-        <div className="md:w-1/4 flex flex-col items-center gap-4">
+        {/* Left side - Product Image and Buttons (Fixed/Sticky on desktop) */}
+        {/* `md:sticky md:top-24 md:self-start` makes this column stay in place as the page scrolls */}
+        <div className="md:w-1/2 flex flex-col items-center gap-4 md:sticky md:top-24 md:self-start">
           <img
             src={book.Images}
             alt={cleanTitle}
-            className="w-full h-auto max-w-sm rounded-lg shadow-lg" // Increased image size to max-w-sm (384px)
+            className="w-full h-auto max-w-sm rounded-lg shadow-lg" // Image size kept as provided
           />
           {/* Add to Cart and Buy Now Buttons */}
-          <div className="flex justify-center gap-4 mt-3 w-full sm:w-auto"> {/* Added mt-4 for spacing, sm:w-auto for better button width control */}
+          <div className="flex justify-center gap-4 mt-3 w-full sm:w-auto">
             <button
               onClick={handleAddToCart}
-              className="bg-gray-500 text-white py-3 px-12 rounded-lg hover:bg-green-600 transition duration-200 whitespace-nowrap" // Removed flex-1, added whitespace-nowrap
+              className="bg-gray-500 text-white py-3 px-12 rounded-lg hover:bg-green-600 transition duration-200 whitespace-nowrap" // Button styling kept as provided
             >
               Add to Cart
             </button>
             <button
               onClick={handleBuyNow}
-              className="bg-green-600 text-white py-3 px-12 rounded-lg hover:bg-green-700 transition duration-200 whitespace-nowrap" // Removed flex-1, added whitespace-nowrap
+              className="bg-green-600 text-white py-3 px-12 rounded-lg hover:bg-green-700 transition duration-200 whitespace-nowrap" // Button styling kept as provided
             >
               Buy Now
             </button>
           </div>
         </div>
 
-        {/* Right side - Product Details (excluding buttons) */}
-        <div className="md:w-1/2">
+        {/* Right side - Product Details and Reviews (Scrollable on desktop) */}
+        {/* `md:w-1/2` column width, `md:max-h` defines max height, `overflow-y-auto` enables vertical scrolling */}
+        {/* `custom-scrollbar` can be defined in your `index.css` for custom scrollbar appearance */}
+        <div className="md:w-1/2 md:max-h-[calc(100vh-16rem)] md:overflow-y-auto custom-scrollbar pr-4">
+          {/* Navigation Breadcrumb (Kept inside right column as per your provided code) */}
           <nav className="text-sm text-gray-500 mb-4">
             <ol className="list-none p-0 inline-flex">
               <li className="flex items-center">
@@ -124,7 +125,6 @@ const ProductDetail = () => {
                 <span className="mx-2">/</span>
               </li>
               <li className="flex items-center">
-                {/* Link to Shop with a category filter */}
                 <Link to={`/shop?category=${encodeURIComponent(primaryCategory)}`} className="text-blue-600 hover:underline">
                   {primaryCategory}
                 </Link>
@@ -135,11 +135,12 @@ const ProductDetail = () => {
               </li>
             </ol>
           </nav>
+          
           <h1 className="text-3xl font-bold mb-4">{cleanTitle}</h1>
           <p className="text-2xl font-semibold text-[rgb(182,215,204)] mb-4">
             Rs.{book.Price}
           </p>
-
+          
           {/* Description */}
           <div className="mb-6">
             <h2 className="text-xl font-semibold mb-2 text-gray-800">Description</h2>
@@ -187,33 +188,33 @@ const ProductDetail = () => {
             </div>
             <p className="text-gray-600">{productReviews.length} reviews</p>
           </div>
-        </div>
-      </div>
 
-      {/* Review Section */}
-      <div className="mt-12">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Customer Reviews</h2>
-          {!showReviewForm && (
-            <button
-              onClick={() => setShowReviewForm(true)}
-              className="bg-green-400 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-200"
-            >
-              Write a Review
-            </button>
-          )}
-        </div>
-
-        {showReviewForm ? (
-          <div className="mb-8">
-            <ReviewForm
-              productId={id}
-              onReviewSubmitted={() => setShowReviewForm(false)}
-            />
+          {/* Review Section (Moved inside the scrollable right column) */}
+          <div className="mt-12">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold">Customer Reviews</h2>
+              {!showReviewForm && (
+                <button 
+                  onClick={() => setShowReviewForm(true)}
+                  className="bg-green-400 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-200"
+                >
+                  Write a Review
+                </button>
+              )}
+            </div>
+            
+            {showReviewForm ? (
+              <div className="mb-8">
+                <ReviewForm 
+                  productId={id}
+                  onReviewSubmitted={() => setShowReviewForm(false)}
+                />
+              </div>
+            ) : null}
+            
+            <ReviewList productId={id} />
           </div>
-        ) : null}
-
-        <ReviewList productId={id} />
+        </div>
       </div>
     </div>
   );
