@@ -6,8 +6,8 @@ import bookData from '../data/Book.json';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useReviews } from '../context/ReviewContext';
-import FilterSidebar from '../components/FilterSidebar';
-import ProductCard from '../components/ProductCard';
+import FilterSidebar from '../components/products/FilterSidebar';
+import ProductCard from '../components/products/ProductCard';
 import { useAuth } from '../context/AuthContext';
 
 const Shop = () => {
