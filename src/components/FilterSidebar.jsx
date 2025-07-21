@@ -1,3 +1,4 @@
+// src/components/FilterSidebar.jsx
 import React from 'react';
 import { Search } from 'lucide-react';
 import Select from 'react-select'; // Import react-select
@@ -15,8 +16,8 @@ const FilterSidebar = ({
   setSelectedPublishers,
   selectedCategories,
   setSelectedCategories,
-  sortBy,
-  setSortBy,
+  // sortBy, // Removed
+  // setSortBy, // Removed
   itemsPerPage,
   setItemsPerPage,
   setCurrentPage,
@@ -52,18 +53,7 @@ const FilterSidebar = ({
           />
         </div>
       </div>
-      <div className="mb-4">
-        <label className="block mb-1 font-semibold">Sort By</label>
-        <select
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-        >
-          <option value="Title">Sort by Title</option>
-          <option value="Price-low">Price: Low to High</option>
-          <option value="Price-high">Price: High to Low</option>
-        </select>
-      </div>
+      {/* Sort By section removed from here */}
 
       <div className="mb-4">
         <label className="block mb-2 font-semibold text-gray-700">Items per Page</label>
@@ -74,7 +64,7 @@ const FilterSidebar = ({
             setItemsPerPage(Number(e.target.value));
             setCurrentPage(1);
           }}
-        >
+          >
           {[4, 8, 12, 16].map(num => (
             <option key={num} value={num}>{num} items</option>
           ))}
@@ -154,4 +144,4 @@ const FilterSidebar = ({
   );
 };
 
-export default FilterSidebar;  
+export default FilterSidebar;
